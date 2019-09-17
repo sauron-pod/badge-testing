@@ -8,6 +8,11 @@
                 return response.json();
             })
             .then(data => {
+                console.log(data);
+                if (data[0] === undefined) {
+                    // console.log("No data.");
+                    $("#root").html("User has not pushed in last 90 days -- information currently unavailable.");
+                } else {
                 const profileImage = data[0].actor.avatar_url;
 
                 // Define date of last push
@@ -44,11 +49,13 @@
                 html += `<img style='width:200px;height:200px' src='${profileImage}'>`;
                 html += `<p>Today is: ${todayMonth}-${todayDate}-${todayYear}</p>`;
                 html += `<p>Last push on: ${lastCommitMonth}-${lastCommitDate}-${lastCommitYear}</p>`;
-                html += `<img style='width:100px;height:100px' src='${badgeImage}'>`;
+                if (badgeImage !== "") {
+                    html += `<img style='width:100px;height:100px' src='${badgeImage}'>`;
+                }
                 html += `<ul>`;
-                html += `<li>Green star = commit today`;
-                html += `<li>Dark blue star = commit this month`;
-                html += `<li>Light blue star = commit this year`;
+                html += `<li>Green star = pushed today`;
+                html += `<li>Dark blue star = pushed this month`;
+                html += `<li>Light blue star = pushed in the last 90 days`;
                 html += `</ul>`;
                 html += `</div>`;
                 $("#root").html(html);
@@ -56,6 +63,7 @@
                 console.log(data);
                 return data;
                 // return data.filter(data => data.type === "PushEvent")[0].created_at;
+                }
             })
             .catch(error => {
                 alert('Oh no! Something went wrong.\nCheck the console for details.');
@@ -66,8 +74,8 @@
     $("#username-submit").click(() => {
         const username = $("#username-input").val();
         displayProfile(username);
-    })
+    });
 
-    // console.log(displayProfile("cadenajohn85"));
+    // console.log(displayProfile("AaronBoehle"));
 
 }
